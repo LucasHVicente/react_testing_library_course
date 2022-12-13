@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import App, { replaceCamelWithSpaces } from "./App";
 
-test("button has correct initial color and updates on click", async () => {
+test("button has correct initial color and updates on click", () => {
   render(<App />);
   //find element by role of button and text of 'Change to Midnight Blue'
-  const colorButton = await screen.findByRole("button", {
+  const colorButton = screen.getByRole("button", {
     name: "Change to Midnight Blue",
   });
 
@@ -16,24 +16,24 @@ test("button has correct initial color and updates on click", async () => {
   expect(colorButton).toHaveTextContent("Change to Medium Violet Red");
 });
 
-test("initial conditions", async () => {
+test("initial conditions", () => {
   render(<App />);
-  const colorButton = await screen.findByRole("button", {
+  const colorButton = screen.getByRole("button", {
     name: "Change to Midnight Blue",
   });
 
   expect(colorButton).toBeEnabled();
 
-  const checkbox = await screen.findByRole("checkbox");
+  const checkbox = screen.getByRole("checkbox");
   expect(checkbox).not.toBeChecked();
 });
 
-test("button is disabled when checkbox is checked", async () => {
+test("button is disabled when checkbox is checked", () => {
   render(<App />);
-  const colorButton = await screen.findByRole("button", {
+  const colorButton = screen.getByRole("button", {
     name: "Change to Midnight Blue",
   });
-  const checkbox = await screen.findByRole("checkbox", {
+  const checkbox = screen.getByRole("checkbox", {
     name: "Disable button",
   });
 
@@ -48,12 +48,12 @@ test("button is disabled when checkbox is checked", async () => {
   expect(checkbox).not.toBeChecked();
 });
 
-test("change button color to gray when disabled", async () => {
+test("change button color to gray when disabled", () => {
   render(<App />);
-  const colorButton = await screen.findByRole("button", {
+  const colorButton = screen.getByRole("button", {
     name: "Change to Midnight Blue",
   });
-  const checkbox = await screen.findByRole("checkbox", {
+  const checkbox = screen.getByRole("checkbox", {
     name: "Disable button",
   });
   //disable button
@@ -66,12 +66,12 @@ test("change button color to gray when disabled", async () => {
   expect(colorButton).toHaveStyle({ backgroundColor: "MediumVioletRed" });
 });
 
-test("change blue button to gray when disabled", async () => {
+test("change blue button to gray when disabled", () => {
   render(<App />);
-  const colorButton = await screen.findByRole("button", {
+  const colorButton = screen.getByRole("button", {
     name: "Change to Midnight Blue",
   });
-  const checkbox = await screen.findByRole("checkbox", {
+  const checkbox = screen.getByRole("checkbox", {
     name: "Disable button",
   });
   //change button to MidnightBlue and disable
