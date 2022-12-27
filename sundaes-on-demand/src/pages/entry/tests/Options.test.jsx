@@ -1,3 +1,4 @@
+import userEvent from "@testing-library/user-event";
 import { render, screen } from "../../../test-utils/testing-library-utils";
 
 import Options from "../Options";
@@ -28,4 +29,28 @@ test("should display image for each topping option from server", async () => {
     "Hot fudge topping",
     "Peanut butter cups topping",
   ]);
+});
+
+test("should not update subtotal if invalid scoops are added", async () => {
+  const user = userEvent.setup();
+  render(<Options optionType="scoops" />);
+
+  const chocolateScoop = await screen.findByRole("spinbutton", {
+    name: /chocolate/i,
+  });
+  const scoopsSubtotal = await screen.findByText(/scoops total:/i);
+
+  await user.clear(chocolateScoop);
+  await user.type(chocolateScoop, "-1");
+
+  expect(scoopsSubtotal).toHaveTextContent("0.00");
+
+  await user.clear(chocolateScoop);
+  await user.type(chocolateScoop, "11");
+
+  expect(scoopsSubtotal).toHaveTextContent("0.00");
+  await user.clear(chocolateScoop);
+  await user.type(chocolateScoop, "1.5");
+
+  expect(scoopsSubtotal).toHaveTextContent("0.00");
 });
