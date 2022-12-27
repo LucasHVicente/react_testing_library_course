@@ -44,9 +44,15 @@ test("order phases for happy path", async () => {
   await user.click(submitOrderButton);
 
   //confirm order number on confirmation page
+  const confirmationLoading = screen.getByText(/loading/i);
+  expect(confirmationLoading).toBeInTheDocument();
   const thankYouHeader = await screen.findByRole("heading", {
     name: /thank you/i,
   });
+
+  const notLoading = screen.queryByText(/loading/i);
+  expect(notLoading).not.toBeInTheDocument();
+
   expect(thankYouHeader).toBeInTheDocument();
 
   const orderNumber = await screen.findByText(/your order number is /i);
@@ -63,4 +69,52 @@ test("order phases for happy path", async () => {
   const toppingsSubtotal = await screen.findByText(/toppings total: \$/i);
   expect(scoopsSubtotal).toHaveTextContent("0.00");
   expect(toppingsSubtotal).toHaveTextContent("0.00");
+});
+
+test("should remove toppings heading if no topping is ordered", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  //add icecream scoops
+  const chocolateScoop = await screen.findByRole("spinbutton", {
+    name: "Chocolate",
+  });
+  await user.clear(chocolateScoop);
+  await user.type(chocolateScoop, "1");
+
+  //find and click order button
+  const orderSundaeButton = screen.getByRole("button", {
+    name: /order sundae!/i,
+  });
+  await user.click(orderSundaeButton);
+
+  //accert if topping header shows
+  const noToppingHeader = screen.queryByRole("heading", { name: /toppings/i });
+  expect(noToppingHeader).not.toBeInTheDocument();
+});
+test("should remove toppings heading if toppings are removed from order", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  //add icecream scoops and remove topping
+  const chocolateScoop = await screen.findByRole("spinbutton", {
+    name: "Chocolate",
+  });
+  await user.clear(chocolateScoop);
+  await user.type(chocolateScoop, "1");
+
+  const mmsTopping = await screen.findByRole("checkbox", { name: /m&ms/i });
+  await user.click(mmsTopping);
+
+  await user.click(mmsTopping);
+
+  //find and click order button
+  const orderSundaeButton = screen.getByRole("button", {
+    name: /order sundae!/i,
+  });
+  await user.click(orderSundaeButton);
+
+  //accert if topping header shows
+  const noToppingHeader = screen.queryByRole("heading", { name: /toppings/i });
+  expect(noToppingHeader).not.toBeInTheDocument();
 });
