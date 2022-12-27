@@ -1,6 +1,14 @@
 import { rest } from "msw";
 
 export const handlers = [
+  rest.post("http://localhost:3030/order", (req, res, ctx) => {
+    const orderNumber = Math.floor(Math.random() * 10000000000);
+    return res(
+      ctx.json({
+        orderNumber,
+      })
+    );
+  }),
   rest.get("http://localhost:3030/scoops", (req, res, ctx) => {
     return res(
       ctx.json([

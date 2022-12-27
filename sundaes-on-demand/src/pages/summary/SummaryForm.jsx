@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 
-export function SummaryForm() {
+export function SummaryForm({ handleSubmit }) {
   const [tcChecked, setTcChecked] = useState(false);
 
   const popover = (
@@ -23,7 +23,12 @@ export function SummaryForm() {
   );
 
   return (
-    <Form>
+    <Form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}
+    >
       <Form.Group controlId="terms-and-conditions">
         <Form.Check
           type="checkbox"

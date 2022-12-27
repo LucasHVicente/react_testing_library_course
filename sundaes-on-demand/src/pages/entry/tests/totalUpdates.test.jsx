@@ -77,7 +77,9 @@ describe("grand total", () => {
   test("should grand total update if topping is added first", async () => {
     const user = userEvent.setup();
     render(<OrderEntry />);
-    const grandTotal = screen.getByRole("heading", { name: /Grand total: \$/ });
+    const grandTotal = screen.getByRole("heading", {
+      name: /grand total: \$/i,
+    });
     const mmsTopping = await screen.findByRole("checkbox", { name: /m&ms/i });
 
     //add topping and update grand total
